@@ -9,13 +9,81 @@
   background-position: top;
   background-size: cover;
   box-shadow: 5px 3px 10px rgba(0, 0, 0, 0.5);
+  position: relative;
 }
+
+.header__menu {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.header__panel {
+  width: 97vw;
+  padding: 20px 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #000000;
+  position: fixed;
+  top: 0;
+  left: 0;
+
+  @media (min-width: $tablet-width) {
+    padding: 20px 30px;
+    position: relative;
+  }
+}
+
+.header__link {
+  color: $light-color;
+
+  &:hover {
+    color: rgba(255, 255, 255, 0.6);
+  }
+
+  &:active {
+    color: rgba(255, 255, 255, 0.3);
+  }
+
+  &--phone-number {
+    display: none;
+
+    @media (min-width: $tablet-width) {
+      display: block;
+    }
+  }
+
+  &--phone-icon {
+    display: block;
+    margin-right: 20px;
+
+    @media (min-width: $tablet-width) {
+      display: none;
+    }
+  }
+}
+
+.header__logo {
+  margin-right: auto;
+  color: $light-color;
+  font-size: 18px;
+
+  @media (min-width: $tablet-width) {
+    font-size: 19px;
+  }
+
+  @media (min-width: $desktop-width) {
+    font-size: 20px;
+  }
+}
+
 
 .header__title,
 .header__text {
-  margin: 120px auto 0;
+  margin: auto auto 0;
   padding: 0 40px;
-  font-size: 85px;
+  font-size: 50px;
   letter-spacing: 2px;
   color: $light-color;
   text-align: center;
@@ -23,10 +91,83 @@
   border: none;
   border-radius: 50%;
   background-color: rgba(0, 0, 0, 0.5);
+
+  @media (min-width: $tablet-width) {
+    font-size: 70px;
+  }
+
+  @media (min-width: $desktop-width) {
+    font-size: 85px;
+  }
 }
 
 .header__text {
-  margin: 0;
-  font-size: 34px;
+  margin-bottom: 70px;
+  margin-top: 40px;
+  font-size: 21px;
 
+  @media (min-width: $tablet-width) {
+    font-size: 28px;
+  }
+
+  @media (min-width: $desktop-width) {
+    font-size: 34px;
+  }
+}
+
+.header__toggle {
+  margin: 0 20px;
+  width: 36px;
+  height: 35px;
+  padding: 0;
+  border-color: transparent;
+  background-color: transparent;
+  position: relative;
+  outline: none;
+  cursor: pointer;
+
+  &::before,
+  &::after {
+    content: "";
+    display: block;
+    position: absolute;
+    top: 10px;
+    left: 0;
+    width: 34px;
+    height: 3px;
+    border: 1px solid #6e6e6e;
+    background-color: #6e6e6e;
+    border-radius: 2px;
+    transition: 0.5s;
+  }
+
+  &::after {
+    top: 19px;
+  }
+
+  &--cross {
+    &::before,
+    &::after {
+      content: "";
+      display: block;
+      position: absolute;
+      top: 15px;
+      left: 0;
+      width: 34px;
+      height: 3px;
+      border: 1px solid #6e6e6e;
+      background-color: #6e6e6e;
+      border-radius: 2px;
+      transform: rotate(45deg);
+      transition: 0.5s;
+    }
+
+    &::after {
+      transform: rotate(-45deg);
+    }
+  }
+
+  @media (min-width: $tablet-width) {
+    display: none;
+  }
 }

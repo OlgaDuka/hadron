@@ -7,11 +7,13 @@ var postcss = require('gulp-postcss');
 var autoprefixer = require('autoprefixer');
 var minify = require('gulp-csso');
 var rename = require('gulp-rename');
+var svgstore = require('gulp-svgstore');
+var svgmin = require('gulp-svgmin');
 var imagemin = require('gulp-imagemin');
+var uglify = require('gulp-uglify');
 var del = require('del');
 var run = require('run-sequence');
 var server = require('browser-sync').create();
-var ghPages = require('gulp-gh-pages');
 
 gulp.task('style', function () {
   gulp.src('sass/style.scss')
@@ -33,7 +35,7 @@ gulp.task('style', function () {
 
 // Оптимизация графики
 gulp.task('images', function() {
-  return gulp.src('img/**/*.{png,jpg,svg}')
+  return gulp.src('img/**/*.{png,jpg,svg,gif}')
     .pipe(imagemin([
       imagemin.optipng({optimizationLevel: 3}),
       imagemin.jpegtran({progressive: true}),
@@ -42,11 +44,43 @@ gulp.task('images', function() {
     .pipe(gulp.dest('images'));
 });
 
+// Создание SVG-спрайта
+gulp.task('sprite', function () {
+  return gulp.src('images/svg/*.svg')
+      .pipe(svgmin())
+      .pipe(svgstore({
+        inlineSvg: true
+      }))
+      .pipe(rename('sprite.svg'))
+      .pipe(gulp.dest('images'));
+});
+
+// Создание SVG-спрайта
+gulp.task('svg-file', function () {
+  return gulp.src('images/svg-file/*.svg')
+      .pipe(svgmin())
+      .pipe(gulp.dest('images/svg-file'));
+});
+
+// Минификация JS-скриптов
+gulp.task('jsmin', function () {
+  return gulp.src(['js/*.js',
+    '!js/*.min.js'])
+      .pipe(uglify())
+      .pipe(rename({
+        suffix: '.min'
+      }))
+      .pipe(gulp.dest('js'));
+});
+
 // Копирование файлов для сборки
 gulp.task('copy', function () {
   return gulp.src([
-    'fonts/*.{woff,woff2}',
+    'fonts/**',
     'images/**',
+    '!images/svg{,/**}',
+    '!images/sprite.svg',
+    'js/*.min.js',
     'css/*.min.css',
     '*.html'
   ], {
@@ -65,17 +99,11 @@ gulp.task('build', function (done) {
   run(
       'clean',
       'style',
+      'jsmin',
       'copy',
       done
   );
 });
-
-// Публикация проекта на гитхаб
-gulp.task('deploy', function () {
-  return gulp.src('./build/**/*')
-      .pipe(ghPages());
-});
-
 
 gulp.task('serve', ['style'], function () {
   server.init({
@@ -87,5 +115,6 @@ gulp.task('serve', ['style'], function () {
   });
 
   gulp.watch('sass/**/*.{scss,sass}', ['style']);
+  gulp.watch('js/*.js').on('change', server.reload);
   gulp.watch('*.html').on('change', server.reload);
 });

@@ -31,20 +31,30 @@
 
 .show__item {
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
   align-items: flex-start;
   margin-bottom: 50px;
 
-  &:nth-child(2n) {
-    flex-direction: row-reverse;
+  @media (min-width: $tablet-width) {
+    flex-direction: row;
+
+    &:nth-child(2n) {
+      flex-direction: row-reverse;
+    }
   }
 }
 
 .show__desc {
-  width: 40%;
+  width: 90%;
+  margin: 0 auto;
   display: flex;
   flex-direction: column;
   align-items: center;
+  text-align: left;
+
+  @media (min-width: $tablet-width) {
+    width: 40%;
+  }
 }
 
 .show__type {
@@ -64,4 +74,5 @@
 
 .show__img {
   box-shadow: 2px 2px 5px 2px rgba(139, 139, 139, 0.5);
+  align-self: center;
 }
